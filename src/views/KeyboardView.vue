@@ -1,17 +1,20 @@
 <template>
   <h1>KEYBOARD</h1>
-  <GeneratedText :text="text" />
+  <GeneratedText :text="text" :index="index" />
 </template>
 
 <script setup lang="ts">
 import GeneratedText from "../components/GeneratedText.vue";
 import { loremIpsum } from "lorem-ipsum";
 
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 
 onMounted(() => {
   window.addEventListener("keypress", function (e) {
-    console.log(String.fromCharCode(e.keyCode));
+    const char = String.fromCharCode(e.keyCode);
+    if (/[a-zA-Z]/.test(char)) {
+      incrementIndex();
+    }
   });
 });
 
@@ -27,6 +30,18 @@ const text = loremIpsum({
   units: "sentences", // paragraph(s), "sentence(s)", or "word(s)"
   // words: ["ad", ...]       // Array of words to draw from
 });
+const index = ref(0);
+
+function incrementIndex() {
+  if (index.value < text.length - 1) {
+    index.value++;
+  }
+}
+function decrementIndex() {
+  if (index.value > 0) {
+    index.value--;
+  }
+}
 </script>
 
 <style lang="scss" scoped></style>
