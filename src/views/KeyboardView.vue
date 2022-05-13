@@ -10,9 +10,11 @@ import { loremIpsum } from "lorem-ipsum";
 import { onMounted, ref } from "vue";
 
 onMounted(() => {
-  window.addEventListener("keypress", function (e) {
-    const char = String.fromCharCode(e.keyCode);
-    if (/[a-zA-Z]/.test(char)) {
+  window.addEventListener("keydown", function (e) {
+    const { key } = e;
+    if (key === "Backspace") {
+      decrementIndex();
+    } else if (/[a-zA-Z]/.test(key)) {
       incrementIndex();
     }
   });

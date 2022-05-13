@@ -18,7 +18,9 @@ const convertTextIntoNodeElements = () => {
     const charachterNode = document.createElement("span");
     charachterNode.innerText = charachter;
     charachterNode.id = `keyboard__charachter__${charIndex}`;
-    charachterNode.className = "pb-1 pt-2 text-lg  font-semibold";
+    charachterNode.className = `pb-1 pt-2 text-lg  font-semibold ${
+      !charIndex && "underline"
+    }`;
     textRef.value.appendChild(charachterNode);
   });
 };
