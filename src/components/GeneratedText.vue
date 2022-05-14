@@ -18,7 +18,7 @@ import {
   validClassNames,
 } from "../constants/textConstants";
 
-defineProps({
+const props = defineProps({
   textMap: [],
 });
 
