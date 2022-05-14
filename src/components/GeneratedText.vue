@@ -1,45 +1,40 @@
 <template>
-  <div ref="textRef"></div>
+  <div>
+    <span
+      v-for="textChar in textMap"
+      :key="textChar.char"
+      :class="className(textChar)"
+    >
+      {{ textChar.char }}
+    </span>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from "vue";
+import {
+  charClassNames,
+  errorClassNames,
+  highlightedCharClassNames,
+  validClassNames,
+} from "../constants/textConstants";
 
-const props = defineProps({
-  text: String,
-  index: Number,
+defineProps({
+  textMap: [],
 });
 
-const textRef = ref(null);
-
-const convertTextIntoNodeElements = () => {
-  const mappedText = props.text.split("");
-  mappedText.forEach((charachter, charIndex) => {
-    const charachterNode = document.createElement("span");
-    charachterNode.innerText = charachter;
-    charachterNode.id = `keyboard__charachter__${charIndex}`;
-    charachterNode.className = `pb-1 pt-2 text-lg  font-semibold ${
-      !charIndex && "underline"
-    }`;
-    textRef.value.appendChild(charachterNode);
-  });
-};
-
-onMounted(convertTextIntoNodeElements);
-watch(
-  () => props.index,
-  (newVal, oldVal) => {
-    console.log("watcheedddd ", newVal, oldVal);
-    const oldCharachterNode = document.getElementById(
-      `keyboard__charachter__${oldVal}`
-    );
-    oldCharachterNode.className = "pb-1 pt-2 text-lg  font-semibold";
-    const newCharachterNode = document.getElementById(
-      `keyboard__charachter__${newVal}`
-    );
-    newCharachterNode.className = "pb-1 pt-2 text-lg  font-semibold underline";
+const className = ({ active, passed, valid }) => {
+  if (active) {
+    return highlightedCharClassNames;
+  } else if (!passed) {
+    return charClassNames;
+  } else if (passed) {
+    if (valid) {
+      return validClassNames;
+    } else {
+      return errorClassNames;
+    }
   }
-);
+};
 </script>
 
 <style scoped></style>

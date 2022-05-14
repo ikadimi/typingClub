@@ -1,38 +1,25 @@
 <template>
   <h1>KEYBOARD</h1>
-  <GeneratedText :text="text" :index="index" />
+  <GeneratedText :textMap="textMappedRef" />
 </template>
 
 <script setup lang="ts">
 import GeneratedText from "../components/GeneratedText.vue";
-import { loremIpsum } from "lorem-ipsum";
+import { loremIpsum, ILoremIpsumParams } from "lorem-ipsum";
+import { mapValues, textToArrayMapping } from "../helpers/textHelpers";
+import { textConfig } from "../constants/textConstants";
 
 import { onMounted, ref } from "vue";
 
+const index = ref(0);
+const textMappedRef = ref([]);
+
 onMounted(() => {
-  window.addEventListener("keydown", function (e) {
-    const { key } = e;
-    if (key === "Backspace") {
-      decrementIndex();
-    } else if (/[a-zA-Z]/.test(key)) {
-      incrementIndex();
-    }
-  });
+  window.addEventListener("keydown", ({ key }) => handleKeyDown(key));
+  textMappedRef.value = textToArrayMapping(text);
 });
 
-const text = loremIpsum({
-  count: 1, // Number of "words", "sentences", or "paragraphs"
-  format: "plain", // "plain" or "html"
-  paragraphLowerBound: 3, // Min. number of sentences per paragraph.
-  paragraphUpperBound: 7, // Max. number of sentences per paragarph.
-  random: Math.random, // A PRNG function
-  sentenceLowerBound: 5, // Min. number of words per sentence.
-  sentenceUpperBound: 15, // Max. number of words per sentence.
-  suffix: "\n", // Line ending, defaults to "\n" or "\r\n" (win32)
-  units: "sentences", // paragraph(s), "sentence(s)", or "word(s)"
-  // words: ["ad", ...]       // Array of words to draw from
-});
-const index = ref(0);
+const text = loremIpsum(textConfig as ILoremIpsumParams);
 
 function incrementIndex() {
   if (index.value < text.length - 1) {
@@ -44,6 +31,25 @@ function decrementIndex() {
     index.value--;
   }
 }
+
+const handleKeyDown = (key) => {
+  textMappedRef.value[index.value].active = false;
+
+  if (key === "Backspace") {
+    textMappedRef.value[index.value].passed = false;
+    decrementIndex();
+  } else if (/^[a-zA-Z .]$/.test(key)) {
+    textMappedRef.value[index.value].passed = true;
+    if (key === text[index.value]) {
+      textMappedRef.value[index.value].valid = true;
+    } else {
+      textMappedRef.value[index.value].valid = false;
+    }
+    incrementIndex();
+  }
+
+  textMappedRef.value[index.value].active = true;
+};
 </script>
 
 <style lang="scss" scoped></style>
