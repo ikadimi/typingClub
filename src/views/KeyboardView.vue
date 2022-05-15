@@ -1,29 +1,56 @@
 <template>
   <h1>KEYBOARD</h1>
   <GeneratedText :textMap="textMappedRef" />
+  <p>{{ numberofEntries }}</p>
+  <p v-if="end">word per minute: {{ wpm }}</p>
+  <p v-if="end">accuracy: {{ accuracy }}</p>
 </template>
 
 <script setup lang="ts">
 import GeneratedText from "../components/GeneratedText.vue";
 import { loremIpsum, ILoremIpsumParams } from "lorem-ipsum";
-import { mapValues, textToArrayMapping } from "../helpers/textHelpers";
+import {
+  getAccuracy,
+  getWordPerMinute,
+  mapValues,
+  textToArrayMapping,
+} from "../helpers/textHelpers";
 import { textConfig } from "../constants/textConstants";
 
 import { onMounted, ref } from "vue";
 
 const index = ref(0);
+const start = ref(0);
+const end = ref(0);
+const wpm = ref(0);
 const textMappedRef = ref([]);
+const numberofEntries = ref(0);
+const accuracy = ref(1);
 
 onMounted(() => {
-  window.addEventListener("keydown", ({ key }) => handleKeyDown(key));
   textMappedRef.value = textToArrayMapping(text);
+  window.addEventListener("keydown", ({ key }) => handleKeyDown(key));
 });
 
 const text = loremIpsum(textConfig as ILoremIpsumParams);
 
 function incrementIndex() {
   if (index.value < text.length - 1) {
+    if (!start.value) {
+      start.value = Date.now();
+    }
     index.value++;
+  } else {
+    if (!end.value) {
+      end.value = Date.now();
+
+      wpm.value = getWordPerMinute(
+        start.value,
+        end.value,
+        numberofEntries.value
+      );
+      accuracy.value = getAccuracy(textMappedRef.value as any);
+    }
   }
 }
 function decrementIndex() {
@@ -46,6 +73,7 @@ const handleKeyDown = (key) => {
       textMappedRef.value[index.value].valid = false;
     }
     incrementIndex();
+    numberofEntries.value++;
   }
 
   textMappedRef.value[index.value].active = true;
