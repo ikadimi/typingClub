@@ -1,5 +1,7 @@
 <template>
-  <div>
+  <div class="max-w-3xl border-b-3 border-gray-900">
+    <StartTyping v-if="!start" />
+
     <span
       v-for="textChar in textMap"
       :key="textChar.char"
@@ -11,6 +13,8 @@
 </template>
 
 <script setup lang="ts">
+import StartTyping from "../components/StartTyping.vue";
+
 import {
   charClassNames,
   errorClassNames,
@@ -19,7 +23,8 @@ import {
 } from "../constants/textConstants";
 
 defineProps({
-  textMap: [],
+  textMap: Array,
+  start: Number,
 });
 
 const className = ({ active, passed, valid }) => {

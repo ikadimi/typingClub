@@ -1,9 +1,10 @@
 <template>
-  <h1>KEYBOARD</h1>
-  <GeneratedText :textMap="textMappedRef" />
-  <p>{{ numberofEntries }}</p>
-  <p v-if="end">word per minute: {{ wpm }}</p>
-  <p v-if="end">accuracy: {{ accuracy }}</p>
+  <div class="bg-grey-50 grid place-items-center h-screen">
+    <GeneratedText :textMap="textMappedRef" :start="start" />
+    <p>{{ numberofEntries }}</p>
+    <p v-if="end">word per minute: {{ wpm }}</p>
+    <p v-if="end">accuracy: {{ accuracy }}</p>
+  </div>
 </template>
 
 <script setup lang="ts">

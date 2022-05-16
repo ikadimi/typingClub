@@ -1,8 +1,11 @@
-export const errorClassNames = "px-1 bg-red-400";
-export const validClassNames = "px-1 bg-green-400";
+export const errorClassNames =
+  "my-1 inline-block whitespace-pre pb-1 pt-2 text-2xl font-semibold bg-red-100";
+export const validClassNames =
+  "my-1 inline-block whitespace-pre pb-1 pt-2 text-2xl font-semibold bg-green-100";
 export const highlightedCharClassNames =
-  "pb-1 pt-2 px-1 text-lg  font-semibold  border-2 border-solid border-blue-400 tracking-widest text-center";
-export const charClassNames = "pb-1 pt-2 text-lg  font-semibold tracking-wider";
+  "my-1 inline-block whitespace-pre bg-slate-50 pb-1 pt-2 text-2xl font-semibold border-b-4 border-solid border-blue-400 text-center";
+export const charClassNames =
+  "my-1 inline-block whitespace-pre pb-1 pt-2 text-2xl font-semibold text-gray-400";
 export const textConfig = {
   count: 1, // Number of "words", "sentences", or "paragraphs"
   format: "plain", // "plain" or "html"
